@@ -1,62 +1,110 @@
 import { Component } from "react";
 import PropTypes from 'prop-types';
-
-import ContactForm from "./Phonebook/ContactForm/ContactForm";
-import Filter from "./Phonebook/Filter/Filter";
-import ContactList from "./Phonebook/ContactList/ContactList";
-
-import s from "../components/Phonebook/ContactList/contactList.module.css"
+import Searchbar from "./Searchbar/Searchbar"
+import ImageGallery from "./ImageGallery/ImageGallery"
+import { getPhoto } from "../../src/shared/api/image";
+import Modal from "./Modal/Modal"
+import Loader from "./Loader/Loader";
+import s from "./Searchbar/searchbar.module.css"
 
 export class App extends Component {
     state = {
-        contacts: [],
-        filter: '',
+        items: [],
+        loading: false,
+        error: null,
+        searchQuery: "",
+        idSearchQuery: "",
+        page: 1,
+        modalOpen: false,
+        modalContent: {
+            id: "",
+            largeImageURL: "",
+            tags: "",
+        }
+    }
+
+    componentDidUpdate(_, prevState) {
+        const {page, searchQuery, idSearchQuery} = this.state;
+        if((searchQuery && prevState.searchQuery !== searchQuery) || page > prevState.page || idSearchQuery !== prevState.idSearchQuery) {
+            this.fetchPhoto();
+        }
+    }
+
+        async fetchPhoto() {
+            const {page, searchQuery} = this.state;
+            this.setState({
+                loading: true,
+            });
+        
+            try {
+                const data = await getPhoto(page, searchQuery);
+                this.setState(({items}) => ({
+                    items: [...items, ...data.hits]
+                    
+                }))
+            } catch (error) {
+                this.setState({
+                    error,
+                })
+            }
+            finally {
+                this.setState({ loading: false })
+            }
+            }
+        
+        formSubmitHandler = data => {
+            const searchQuery = data.search;
+            const idSearchQuery = data.id;
+            this.setState({ searchQuery: searchQuery }) 
+            this.setState({idSearchQuery: idSearchQuery })
+            this.setState({ items: [] })
+        };
+
+        loadMore = () => {
+            this.setState(({page}) => ({
+                page: page + 1
+            }))
+        };
+
+        openModal = (modalContent) => {
+            this.setState({
+                modalOpen: true,
+                modalContent,
+            })
+        }
+    
+        closeModal = ()=> {
+            this.setState({
+                modalOpen: false,
+                modalContent: {
+                    id: "",
+                    largeImageURL: "",
+                    tags: "",
+                }
+            })
         }
 
-// Записуємо нову дату в contacts (зберігаємо минулий стан)
-formSubmitHandler = data => {
-    if(this.state.contacts.find((element) => element.data.name === data.name)) {
-        return alert (`${data.name} is alredy in contact`);
-    }
-    const listContacts = {
-        data,
-    };
-this.setState(prevState => ({
-    contacts: [listContacts, ...prevState.contacts],
-}));
-};
-
-changeFilter = e => {
-    this.setState({filter: e.currentTarget.value});
-};
-
-getFiltredContacts = () => {
-    const {filter, contacts} = this.state;
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter((element) =>
-    element.data.name.toLowerCase().includes(normalizedFilter));
-}
-
-deleteContact = contactId => {
-    this.setState(prevState => ({
-        contacts: prevState.contacts.filter((element) => element.data.id !== contactId),
-    }));
-};
-
     render(){
-        const filtredContacts = this.getFiltredContacts();
+        const {formSubmitHandler, loadMore, openModal, closeModal} = this;
+        const {items, loading, error, modalOpen, modalContent} = this.state;
 
+        const isItemPresent = Boolean(items.length);
+        const isItemAbsent = Boolean(items.length === 0 && this.state.searchQuery !== "");
+
+        // console.log(this.state.searchQuery)
+        // console.log(this.state.items)
+        // console.log(modalContent)
         return (
-            <div className={s.phonebook}>
-                <h2 className={s.phonebookTitle}>Phonebook</h2>
-                <ContactForm onSubmit={this.formSubmitHandler} />
-
-                <h2 className={s.phonebookTitle}>Contacts</h2>
-                <div className={s.contact}>
-                    <Filter value={this.filter} onChange={this.changeFilter}/>
-                    <ContactList options={filtredContacts} onDeleteContact={this.deleteContact}/>
-                </div>
-            </div>
+        <div className={s.container}>
+            {modalOpen && <Modal close={closeModal} content={modalContent} status={loading}/>} 
+            <Searchbar onSubmit={formSubmitHandler}/>
+            {isItemPresent && <ImageGallery itemsData={this.state.items} onClick={openModal}/>}
+            {loading && <Loader/>}
+            {isItemPresent && <button className={s.buttonLoad} onClick={loadMore}>load more</button>}
+            {isItemAbsent && <p>Sorry, we didn't find any photos for your request.</p>}
+            {error && <p>Failed to upload photos.</p>}
+        </div>
+        
         )
     }
 }
@@ -68,10 +116,21 @@ App.defaultProps = {
 }
 
 App.propTypes = {
+    fetchPhoto: PropTypes.func,
+    formSubmitHandler: PropTypes.func,
     data: PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string,
+        items: PropTypes.array,
+        loading: PropTypes.bool,
+        error: PropTypes.bool,
+        searchQuery:PropTypes.string,
+        idSearchQuery: PropTypes.string,
+        page: PropTypes.number,
+        modalOpen: PropTypes.bool,
         number: PropTypes.string,
-        licence: PropTypes.bool,
-        }),
+        modalContent:PropTypes.shape({
+            id: PropTypes.string,
+            largeImageURL: PropTypes.string,
+            tags: PropTypes.string,
+        })
+    }),
 }
