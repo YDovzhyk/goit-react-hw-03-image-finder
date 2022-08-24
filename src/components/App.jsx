@@ -53,6 +53,7 @@ export class App extends Component {
             }
         
         formSubmitHandler = data => {
+            console.log(data)
             const searchQuery = data.search;
             const idSearchQuery = data.id;
             this.setState({ searchQuery: searchQuery }) 
@@ -119,18 +120,7 @@ App.propTypes = {
     fetchPhoto: PropTypes.func,
     formSubmitHandler: PropTypes.func,
     data: PropTypes.shape({
-        items: PropTypes.array,
-        loading: PropTypes.bool,
-        error: PropTypes.bool,
-        searchQuery:PropTypes.string,
-        idSearchQuery: PropTypes.string,
-        page: PropTypes.number,
-        modalOpen: PropTypes.bool,
-        number: PropTypes.string,
-        modalContent:PropTypes.shape({
-            id: PropTypes.string,
-            largeImageURL: PropTypes.string,
-            tags: PropTypes.string,
-        })
+        search:PropTypes.string,
+        id: PropTypes.string,
     }),
 }
