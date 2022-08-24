@@ -53,7 +53,6 @@ export class App extends Component {
             }
         
         formSubmitHandler = data => {
-            console.log(data)
             const searchQuery = data.search;
             const idSearchQuery = data.id;
             this.setState({ searchQuery: searchQuery }) 
