@@ -92,9 +92,6 @@ export class App extends Component {
         const isItemPresent = Boolean(items.length);
         const isItemAbsent = Boolean(items.length === 0 && this.state.searchQuery !== "");
 
-        // console.log(this.state.searchQuery)
-        // console.log(this.state.items)
-        // console.log(modalContent)
         return (
         <div className={s.container}>
             {modalOpen && <Modal close={closeModal} content={modalContent} status={loading}/>} 
