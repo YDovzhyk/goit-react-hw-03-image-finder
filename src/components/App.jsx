@@ -90,7 +90,7 @@ export class App extends Component {
         const {items, loading, error, modalOpen, modalContent} = this.state;
 
         const isItemPresent = Boolean(items.length);
-        const isItemAbsent = Boolean(items.length === 0 && this.state.searchQuery !== "");
+        const isItemAbsent = Boolean(items.length === 0 && this.state.searchQuery !== "" && loading === false);
 
         return (
         <div className={s.container}>
