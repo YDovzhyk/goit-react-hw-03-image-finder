@@ -1,4 +1,5 @@
 import { Component } from "react";
+import PropTypes from 'prop-types';
 
 import s from "./modal.module.css"
 
@@ -20,7 +21,6 @@ class Modal extends Component {
 
     render(){
         const {closeModal} = this;
-
         return (
             <div className={s.overlay} onClick={closeModal}>
                 <div className={s.modal}>
@@ -33,3 +33,18 @@ class Modal extends Component {
 }
 
 export default Modal;
+
+Modal.defaultProps = {
+    content: {},
+}
+
+Modal.propTypes = {
+    status: PropTypes.bool.isRequired,
+    close: PropTypes.func.isRequired,
+    data: PropTypes.object,
+    content: PropTypes.shape({
+        largeImageURL: PropTypes.string.isRequired,
+        id: PropTypes.number.isRequired,
+        tags: PropTypes.string.isRequired,
+}),
+}

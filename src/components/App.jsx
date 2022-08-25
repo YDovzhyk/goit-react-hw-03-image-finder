@@ -53,10 +53,10 @@ export class App extends Component {
             }
         
         formSubmitHandler = data => {
-            const searchQuery = data.search;
-            const idSearchQuery = data.id;
-            this.setState({ searchQuery: searchQuery }) 
-            this.setState({idSearchQuery: idSearchQuery })
+            const searchValue = data.search;
+            const idSearchValue = data.id;
+            this.setState({ searchQuery: searchValue }) 
+            this.setState({ idSearchQuery: idSearchValue })
             this.setState({ items: [] })
         };
 
@@ -116,7 +116,7 @@ App.propTypes = {
     fetchPhoto: PropTypes.func,
     formSubmitHandler: PropTypes.func,
     data: PropTypes.shape({
-        search:PropTypes.string,
+        search: PropTypes.string,
         id: PropTypes.string,
     }),
 }
