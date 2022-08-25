@@ -5,6 +5,14 @@ import s from "./modal.module.css"
 
 class Modal extends Component {
 
+    static defaultProps = {
+        close: () => {}
+    }
+
+    static propTypes = {
+        close: PropTypes.func,
+    }
+
     componentDidMount(){
         document.addEventListener("keydown", this.closeModal)
     }
@@ -40,7 +48,6 @@ Modal.defaultProps = {
 
 Modal.propTypes = {
     status: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired,
     data: PropTypes.object,
     content: PropTypes.shape({
         largeImageURL: PropTypes.string.isRequired,

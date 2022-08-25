@@ -39,7 +39,6 @@ class Searchbar extends Component {
     };
 
 render() {
-    console.log(this.props)
     const {handleChange, handleSubmit, searchId} = this;
         const {search} = this.state;
     return (
