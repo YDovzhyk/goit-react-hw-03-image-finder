@@ -13,7 +13,6 @@ export class App extends Component {
         loading: false,
         error: null,
         searchQuery: "",
-        idSearchQuery: "",
         page: 1,
         modalOpen: false,
         modalContent: {
