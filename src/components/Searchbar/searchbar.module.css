@@ -27,7 +27,7 @@ form {
     position: absolute; 
     top: 0;
     right: 0px;
-    width: 62px;
+    width: 42px;
     height: 42px;
     border: none;
     background: #7BA7AB;
@@ -58,4 +58,8 @@ form {
     text-transform: uppercase;
     cursor: pointer;
     transition: background-color 250ms linear;
+}
+.icon {
+    color: white;
+    font-size: 17px;
 }

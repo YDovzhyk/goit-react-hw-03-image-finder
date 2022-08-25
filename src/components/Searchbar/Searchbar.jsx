@@ -1,6 +1,10 @@
 import { Component } from "react";
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+
+
 
 import s from "./searchbar.module.css";
 
@@ -45,7 +49,7 @@ render() {
     <header className={s.searchbar}>
         <form onSubmit={handleSubmit} className={s.form}>
             <button type="submit" className={s.button}>
-            <span className={s.buttonLabel}>Search</span>
+            <FontAwesomeIcon className={s.icon} icon={faMagnifyingGlass}/>
             </button>
 
             <input
